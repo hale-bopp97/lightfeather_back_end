@@ -1,0 +1,130 @@
+ <!DOCTYPE html>
+ <html>
+    <body>
+        <form id="form" method="POST" action="/api/submit">
+
+            <title>Submit App</title>
+            <link rel = "stylesheet" href= '/master.css'/>
+
+            <div class="main-flex">
+                <div>
+                    <label for="firstName">First Name</label>
+                    <input type="text" name="firstName" id="firstName" required="required">
+                </div>
+                <div>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" name="lastName" id="lastName" required="required">
+                </div>
+                <div>
+                    <label for="contact">Contact Method</label>
+                    <select id="contact" required="required">
+                        <option value=""></option>
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+                    <div id="email-wrapper" hidden>
+                      <label for="email">Email</label>
+                      <input type="email" name="email" id="email" disabled>
+                    </div>
+                <div id="phone-wrapper" hidden>
+                    <label for="phone">Phone</label>
+                    <input placeholder="###-###-####" type="tel" name="phone" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" disabled>
+                </div>
+                <div>
+                    <label for="supervisor">Supervisor</label>
+                    <select name="supervisor" id="supervisor" required="required" disabled>
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="button-flex">
+                    <button type="submit" class="btn-primary btn" name="submit" id="submit">Enter</button>
+                </div>
+            </div>
+        </form>
+
+        <script>
+
+          const form             = document.getElementById('form');
+          const firstNameInput   = document.getElementById('firstName');
+          const lastNameInput    = document.getElementById('lastName');
+          const contactSelect    = document.getElementById('contact');
+          const emailWrapper     = document.getElementById('email-wrapper');
+          const emailInput       = document.getElementById('email');
+          const phoneWrapper     = document.getElementById('phone-wrapper');
+          const phoneInput       = document.getElementById('phone');
+          const supervisorSelect = document.getElementById('supervisor');
+
+          firstNameInput.addEventListener('keyup',  onlyAlpha);
+          lastNameInput.addEventListener ('keyup',  onlyAlpha);
+          contactSelect.addEventListener ('change', configureContactInput);
+
+          configureContactInput();
+          initSupervisors();
+
+          async function initSupervisors() {
+
+            const response = await fetch('/api/supervisors');
+            const data     = await response.json();
+
+            for(const supervisor of data) {
+
+              const option = document.createElement('option');
+              option.value = option.innerHTML = supervisor;
+
+              supervisorSelect.appendChild(option);
+
+            }
+
+            supervisorSelect.disabled = false;
+
+          }
+
+
+          function onlyAlpha(e) {
+
+            const input = e.target;
+            input.value = input.value.replace(/[0-9]/g, '');
+
+          }
+
+          function configureContactInput() {
+
+              switch(contactSelect.value) {
+
+                case 'phone':
+
+                  phoneWrapper.hidden = false;
+                  emailWrapper.hidden = true;
+                  phoneInput.required = true;
+                  emailInput.required = false;
+                  phoneInput.disabled = false;
+                  emailInput.disabled = true;
+                  break;
+
+                case 'email':
+
+                  phoneWrapper.hidden = true;
+                  emailWrapper.hidden = false;
+                  phoneInput.required = false;
+                  emailInput.required = true;
+                  phoneInput.disabled = true;
+                  emailInput.disabled = false;
+                  break;
+
+                default:
+
+                  phoneWrapper.hidden = true;
+                  emailWrapper.hidden = true;
+                  phoneInput.required = false;
+                  emailInput.required = false;
+                  phoneInput.disabled = true;
+                  emailInput.disabled = true;
+
+              }
+
+            }
+
+        </script>
+    </body>
+ </html>
