@@ -1,5 +1,5 @@
 # Overview
-This template provides a very basic Spring Boot application. This is intended to provide a bare minimum set of files that is executable, and can be compiled into a functional docker image.
+GET to the AWS endpoint is located at http://localhost:8080/api/supervisors. Form to submit to POST will be at http://localhost:8080/.
 
 # Running locally with gradle
 gradle build
